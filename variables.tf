@@ -16,20 +16,21 @@ variable "path_to_iam_policy_document_file" {
 variable "iam_policy_document" {
   type        = string
   description = "An IAM Policy Document written as HCL. This will be converted to json using Terraform's bultin `jsonencode()` function."
-  default = <<-POLICY
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Deny",
-        "Action": [
-          "*"
-        ],
-        "Resource": "*"
-      }
-    ]
-  }
-  POLICY
+  default = ""
+  ## default = <<-POLICY
+  ## {
+  ##   "Version": "2012-10-17",
+  ##   "Statement": [
+  ##     {
+  ##       "Effect": "Deny",
+  ##       "Action": [
+  ##         "*"
+  ##       ],
+  ##       "Resource": "*"
+  ##     }
+  ##   ]
+  ## }
+  ## POLICY
 }
 
 variable "aws_ssh_key_name" {
