@@ -72,6 +72,8 @@ resource "aws_instance" "instance" {
     encrypted             = var.aws_ebs_volume_encryption ? true : false
     kms_key_id            = var.aws_ebs_volume_encryption ? var.aws_ebs_volume_encryption_key_arn : null
   }
+
+  user_data = var.instance_user_data
 }
 
 resource "aws_iam_instance_profile" "workstation_instance_profile" {
@@ -105,7 +107,7 @@ resource "aws_iam_role" "workstation_role" {
 resource "aws_iam_role_policy" "workstation_instance_policy" {
   name   = var.iam_role_policy_name
   role   = aws_iam_role.workstation_role.id
-  policy = var.iam_policy_document_json != {} ? jsonencode(var.iam_policy_document_json) : file(var.path_to_iam_policy_document_file)
+  policy = var.iam_policy_document_json
 }
 
 output "instance_public_ip" {
