@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.70.0"
+      version = "~> 4"
     }
   }
 }
@@ -57,7 +57,7 @@ resource "aws_instance" "instance" {
   key_name  = var.aws_ssh_key_name
   subnet_id = var.subnet_id
 
-  iam_instance_profile = aws_iam_instance_profile.workstation_instance_profile.name
+  iam_instance_profile = length(var.iam_policy_document) > 0 ? aws_iam_instance_profile.workstation_instance_profile[0].name : null
 
   associate_public_ip_address = var.aws_instance_associate_public_ip_address
 
@@ -72,15 +72,19 @@ resource "aws_instance" "instance" {
     encrypted             = var.aws_ebs_volume_encryption ? true : false
     kms_key_id            = var.aws_ebs_volume_encryption ? var.aws_ebs_volume_encryption_key_arn : null
   }
+
+  user_data = var.instance_user_data
 }
 
 resource "aws_iam_instance_profile" "workstation_instance_profile" {
-  name = var.iam_instance_profile_name
-  role = aws_iam_role.workstation_role.name
+  count  = length(var.iam_policy_document) > 0 ? 1 : 0
+  name_prefix = var.iam_instance_profile_name
+  role = aws_iam_role.workstation_role[count.index].name
 }
 
 resource "aws_iam_role" "workstation_role" {
-  name = var.iam_role_name
+  count  = length(var.iam_policy_document) > 0 ? 1 : 0
+  name_prefix = var.iam_role_name
   path = var.iam_role_path
 
   assume_role_policy = <<-EOF
@@ -103,11 +107,16 @@ resource "aws_iam_role" "workstation_role" {
 }
 
 resource "aws_iam_role_policy" "workstation_instance_policy" {
-  name   = var.iam_role_policy_name
-  role   = aws_iam_role.workstation_role.id
-  policy = var.iam_policy_document_json != {} ? jsonencode(var.iam_policy_document_json) : file(var.path_to_iam_policy_document_file)
+  count  = length(var.iam_policy_document) > 0 ? 1 : 0
+  name_prefix   = var.iam_role_policy_name
+  role   = aws_iam_role.workstation_role[count.index].id
+  policy = var.iam_policy_document
 }
 
 output "instance_public_ip" {
   value = var.aws_instance_associate_public_ip_address ? aws_instance.instance.public_ip : null
+}
+
+output "instance_public_ec2_dns" {
+  value = aws_instance.instance.public_dns
 }
