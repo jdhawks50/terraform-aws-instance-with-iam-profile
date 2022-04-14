@@ -35,6 +35,7 @@ variable "iam_policy_document" {
 variable "aws_ssh_key_name" {
   description = "The name of the AWS SSH key associated with the instance."
   type = string
+  default = ""
 }
 
 variable "aws_ami_id" {
