@@ -107,7 +107,7 @@ resource "aws_iam_role" "workstation_role" {
 resource "aws_iam_role_policy" "workstation_instance_policy" {
   name   = var.iam_role_policy_name
   role   = aws_iam_role.workstation_role.id
-  policy = var.iam_policy_document_json
+  policy = var.iam_policy_document
 }
 
 output "instance_public_ip" {
