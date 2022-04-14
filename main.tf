@@ -113,3 +113,7 @@ resource "aws_iam_role_policy" "workstation_instance_policy" {
 output "instance_public_ip" {
   value = var.aws_instance_associate_public_ip_address ? aws_instance.instance.public_ip : null
 }
+
+output "instance_public_ec2_dns" {
+  value = aws_instance.instance.public_dns
+}
