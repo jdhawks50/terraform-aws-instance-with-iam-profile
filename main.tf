@@ -57,7 +57,7 @@ resource "aws_instance" "instance" {
   key_name  = var.aws_ssh_key_name
   subnet_id = var.subnet_id
 
-  iam_instance_profile = aws_iam_instance_profile.workstation_instance_profile.name
+  iam_instance_profile = length(var.iam_policy_document) > 0 ? aws_iam_instance_profile.workstation_instance_profile[0].name : null
 
   associate_public_ip_address = var.aws_instance_associate_public_ip_address
 
