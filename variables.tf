@@ -50,7 +50,7 @@ variable "aws_instance_size" {
 }
 
 variable "aws_ebs_volume_size" {
-  descritpion = "The size, in GiB, of the EBS volume."
+  description = "The size, in GiB, of the EBS volume."
   type    = number
   default = 15
 }
