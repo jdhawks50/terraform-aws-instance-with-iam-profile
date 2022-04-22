@@ -74,6 +74,10 @@ resource "aws_instance" "instance" {
   }
 
   user_data = var.instance_user_data
+
+  tags = {
+    Name = var.instance_name
+  }
 }
 
 resource "aws_iam_instance_profile" "workstation_instance_profile" {
@@ -115,6 +119,10 @@ resource "aws_iam_role_policy" "workstation_instance_policy" {
 
 output "instance_public_ip" {
   value = var.aws_instance_associate_public_ip_address ? aws_instance.instance.public_ip : null
+}
+
+output "instance_private_ip" {
+  value = aws_instance.instance.private_ip
 }
 
 output "instance_public_ec2_dns" {
