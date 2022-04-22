@@ -99,6 +99,12 @@ variable "security_group_name" {
   default = "aws-admin-workstation-sg"
 }
 
+variable "instance_name" {
+  description = "Name tag on the instance."
+  type = string
+  default = "aws-admin-workstation"
+}
+
 variable "security_group_description" {
   type    = string
   default = "aws-admin-workstation-sg"
